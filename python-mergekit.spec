@@ -31,6 +31,11 @@ Requires:	python%{pyver}dist(typing-extensions)
 Requires:	python%{pyver}dist(pyyaml)
 Recommends:	python%{pyver}dist(sentencepiece)
 Recommends:	python%{pyver}dist(scipy)
+Requires:	python%{pyver}dist(datasets)
+
+# Generator copies exact pins (click==8.2.1, tqdm==4.67.1, pydantic~=2.10,
+# safetensors~=0.5, accelerate~=1.6) that reject cooker versions.
+%global __requires_exclude ^python[0-9.]+dist\\((click|tqdm|pydantic|safetensors|accelerate|immutables)\\)
 
 %description
 mergekit merges Hugging Face / PyTorch language models (linear, SLERP,
@@ -41,6 +46,24 @@ the difference between a fine-tune and its base:
   mergekit-extract-lora --model finetune --base base ./lora-out
 
 GGUF merge of an existing adapter is llama-export-lora (llama-cpp-examples).
+
+%prep -a
+python - <<'PY'
+from pathlib import Path
+p = Path("pyproject.toml")
+t = p.read_text()
+for a, b in [
+    ('"tqdm==4.67.1"', '"tqdm>=4.67.1"'),
+    ('"click==8.2.1"', '"click>=8.2.1"'),
+    ('"safetensors~=0.5.2"', '"safetensors>=0.5.2"'),
+    ('"accelerate~=1.6.0"', '"accelerate>=1.6.0"'),
+    ('"pydantic~=2.10.6"', '"pydantic>=2.10.6"'),
+    ('"immutables==0.21"', '"immutables>=0.21"'),
+]:
+    t = t.replace(a, b)
+p.write_text(t)
+print("patched mergekit pyproject.toml")
+PY
 
 %files
 %doc README.md

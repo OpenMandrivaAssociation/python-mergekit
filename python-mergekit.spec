@@ -1,6 +1,6 @@
 Name:		python-mergekit
 Version:	0.1.4
-Release:	1
+Release:	2
 Summary:	Toolkit for merging pre-trained large language models
 License:	LGPL-3.0-only
 Group:		Development/Python
@@ -9,7 +9,7 @@ Source0:	https://files.pythonhosted.org/packages/source/m/mergekit/mergekit-%{ve
 BuildArch:	noarch
 BuildSystem:	python
 BuildRequires:	python
-BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(python3)
 BuildRequires:	python%{pyver}dist(pip)
 BuildRequires:	python%{pyver}dist(setuptools)
 
